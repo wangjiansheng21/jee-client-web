@@ -30,7 +30,7 @@ public interface LoginService {
      */
     public RpcResponse loginOut(LoginOutRequest loginOutRequest);
 
-    public RpcResponse<String> getWxPhoneNum();
+
 
 
 
