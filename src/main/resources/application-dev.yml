@@ -1,0 +1,24 @@
+server:
+  port: 9091
+spring:
+  servlet:
+     multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+  autoconfigure:
+    exclude:
+dubbo:
+  protocol:
+    name: dubbo
+    accesslog: false
+    port: 12822
+  application:
+    name: client-web
+    logger: slf4j
+  provider:
+    filter:
+  server: true
+  registry:
+    protocol: zookeeper
+    address: 8.133.160.19:2181 #zookeeper://127.0.0.1:2181
+
