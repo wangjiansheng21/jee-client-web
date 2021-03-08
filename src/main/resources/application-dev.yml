@@ -21,4 +21,8 @@ dubbo:
   registry:
     protocol: zookeeper
     address: 8.133.160.19:2181 #zookeeper://127.0.0.1:2181
-
+appId: wx4ee63f7f28764c12
+appSecret: 56c8b14ed1c2a2a1c0de0400a6f5dc50
+wx:
+  session:
+    url: https://api.weixin.qq.com/sns/jscode2session?

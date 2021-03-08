@@ -29,6 +29,14 @@ public class LoginServiceImpl implements LoginService {
         return null;
     }
 
+
+    public LoginVO loginForWXMini(LoginRequest loginRequest){
+        //根据微信
+        return  null;
+
+    }
+
+
     @Override
     public RpcResponse loginOut(LoginOutRequest loginOutRequest) {
         return null;
