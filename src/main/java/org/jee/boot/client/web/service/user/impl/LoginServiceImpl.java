@@ -1,6 +1,7 @@
 package org.jee.boot.client.web.service.user.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import org.jee.boot.client.web.request.login.LoginOutRequest;
 import org.jee.boot.client.web.request.login.LoginRequest;
 import org.jee.boot.client.web.request.login.UserRegisterRequest;
@@ -8,10 +9,15 @@ import org.jee.boot.client.web.request.login.WxAuthLoginRequest;
 import org.jee.boot.client.web.service.user.LoginService;
 import org.jee.boot.client.web.service.wx.WxService;
 import org.jee.boot.client.web.vo.LoginVO;
+import org.jee.boot.client.web.vo.UserSessionVO;
 import org.jee.boot.client.web.vo.WxSessionVO;
 import org.jee.boot.dubbo.response.RpcResponse;
 import org.jee.boot.user.api.UserInfoApi;
+import org.jee.boot.user.api.UserThirdAuthsApi;
+import org.jee.boot.user.api.enums.UserThirdAuthsEnum;
 import org.jee.boot.user.api.request.AddUserInfoRequest;
+import org.jee.boot.user.api.request.AddUserThirdAuthsRequest;
+import org.jee.boot.user.api.vo.ThirdAuthVO;
 import org.jee.boot.user.api.vo.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static org.jee.boot.client.web.util.RedisKey.LOGIN_TOKEN_KEY;
 import static org.jee.boot.client.web.util.RedisKey.WX_SESSION_KEY;
 
 @Service
@@ -26,6 +36,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Reference
     UserInfoApi userInfoApi;
+
+    @Reference
+    UserThirdAuthsApi userThirdAuthsApi;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -56,8 +69,49 @@ public class LoginServiceImpl implements LoginService {
             rpcResponse.setSysFail("手机号和当前登录微信不一致!");
             return rpcResponse;
         }
-        //调用用户中心第三方授权接口
-        return null;
+        //根据手机号码查询用户基本信息
+        RpcResponse<UserInfoVO> userInfoByPhoneResponse = userInfoApi.getUserInfoByPhone(wxSessionVO.getPhoneNum());
+        if (!userInfoByPhoneResponse.isSucces()) {
+            rpcResponse.copy(userInfoByPhoneResponse);
+            return rpcResponse;
+        }
+        UserInfoVO userInfoVO = userInfoByPhoneResponse.getData();
+        //用户不存在插入用户信息
+        if (userInfoVO == null) {
+            AddUserInfoRequest addUserInfoRequest = new AddUserInfoRequest();
+            addUserInfoRequest.setPhone(wxSessionVO.getPhoneNum());
+            RpcResponse<Long> addUserInfoResponse = userInfoApi.addUserInfo(addUserInfoRequest);
+            if (!addUserInfoResponse.isSucces()) {
+                rpcResponse.copy(addUserInfoResponse);
+                return rpcResponse;
+            }
+            userInfoVO.setPhone(wxSessionVO.getSessionKey());
+            userInfoVO.setUserId(addUserInfoResponse.getData());
+        }
+        //查询授权信息记录
+        RpcResponse<ThirdAuthVO> authVORpcResponse = userThirdAuthsApi.getUserThirdAuthInfo(UserThirdAuthsEnum.WX.getValue(), wxSessionVO.getOpenId());
+        if (!authVORpcResponse.isSucces()) {
+            rpcResponse.copy(authVORpcResponse);
+            return rpcResponse;
+        }
+        if (authVORpcResponse.getData() == null) {
+            //授权信息不存在，插入用户授权信息
+            AddUserThirdAuthsRequest addUserThirdAuthsRequest = new AddUserThirdAuthsRequest();
+            addUserThirdAuthsRequest.setIdentifier(wxSessionVO.getOpenId());
+            addUserThirdAuthsRequest.setIdentityType(UserThirdAuthsEnum.WX.getValue());
+            addUserThirdAuthsRequest.setUserId(userInfoVO.getUserId());
+            userThirdAuthsApi.addUserThirdAuths(addUserThirdAuthsRequest);
+        }
+        //生成token
+        String token = UUID.randomUUID().toString();
+        UserSessionVO userSessionVO = new UserSessionVO();
+        BeanUtils.copyProperties(userInfoVO, userSessionVO);
+        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + token, JSON.toJSONString(userSessionVO), 10, TimeUnit.MINUTES);
+        //返回登录信息
+        LoginVO loginVO = new LoginVO();
+        BeanUtils.copyProperties(userInfoVO, loginVO);
+        loginVO.setToken(token);
+        return rpcResponse;
     }
 
 

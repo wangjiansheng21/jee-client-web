@@ -2,8 +2,12 @@ package org.jee.boot.client.web.vo;
 
 import lombok.Data;
 
+/**
+ * @Author jiansheng.wang
+ * @Date 2021/3/10 15:14
+ */
 @Data
-public class LoginVO {
+public class UserSessionVO {
     /**
      * 登录账号名（不可以重复）
      */
@@ -25,13 +29,14 @@ public class LoginVO {
      * 手机号码
      */
     private String phone;
+
     /**
      * 邮箱
      */
     private String email;
 
     /**
-     * token
+     * 用户id
      */
-    private String token;
+    private Long userId;
 }
