@@ -49,6 +49,10 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public RpcResponse<LoginVO> login(LoginRequest loginRequest) {
         RpcResponse<LoginVO> rpcResponse = RpcResponse.ok();
+        if (loginRequest.getLoginType() == null) {
+            rpcResponse.setSysFail("loginType必填");
+            return rpcResponse;
+        }
         UserInfoVO userInfoVO = null;
         //手机号+密码登录；账号+密码登录；邮箱+密码登录；手机号+验证码登录
         if (loginRequest.getLoginType().intValue() == 1) {
@@ -90,7 +94,7 @@ public class LoginServiceImpl implements LoginService {
             return rpcResponse;
         }
         //判断手机号码是否合法
-        if (!wxAuthLoginRequest.getPhoneNum().equals(wxSessionVO.getPhoneNum())) {
+        if (!wxAuthLoginRequest.getPhone().equals(wxSessionVO.getPhoneNum())) {
             rpcResponse.setSysFail("手机号和当前登录微信不一致!");
             return rpcResponse;
         }

@@ -34,4 +34,9 @@ public class LoginVO {
      * token
      */
     private String token;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 }

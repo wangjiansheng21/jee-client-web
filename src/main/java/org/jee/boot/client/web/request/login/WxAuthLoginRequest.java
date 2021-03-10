@@ -17,5 +17,5 @@ public class WxAuthLoginRequest {
 
     @NotNull
     //微信手机号码
-    private String phoneNum;
+    private String phone;
 }
