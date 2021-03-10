@@ -48,11 +48,36 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public RpcResponse<LoginVO> login(LoginRequest loginRequest) {
+        RpcResponse<LoginVO> rpcResponse = RpcResponse.ok();
+        UserInfoVO userInfoVO = null;
         //手机号+密码登录；账号+密码登录；邮箱+密码登录；手机号+验证码登录
+        if (loginRequest.getLoginType().intValue() == 1) {
+            if (StringUtils.isEmpty(loginRequest.getPhone()) || StringUtils.isEmpty(loginRequest.getPassWord())) {
+                rpcResponse.setSysFail("手机号、密码必填");
+                return rpcResponse;
+            }
+            RpcResponse<Boolean> authResponse = userInfoApi.authByPhoneAndPassWord(loginRequest.getPhone(), loginRequest.getPassWord());
+            if (!authResponse.isSucces()) {
+                rpcResponse.copy(authResponse);
+                return rpcResponse;
+            }
+            if (!authResponse.getData()) {
+                rpcResponse.setSysFail("密码错误");
+                return rpcResponse;
+            }
+            //校验通过,生成用户登录信息
+            RpcResponse<UserInfoVO> userInfoVORpcResponse = userInfoApi.getUserInfoByPhone(loginRequest.getPhone());
+            if (!userInfoVORpcResponse.isSucces()) {
+                rpcResponse.copy(authResponse);
+                return rpcResponse;
+            }
+            userInfoVO = userInfoVORpcResponse.getData();
 
+        }
         //登录成功返回token及用户基本信息
-
-        return null;
+        LoginVO loginVO = saveUserSessionVO(userInfoVO);
+        rpcResponse.setData(loginVO);
+        return rpcResponse;
     }
 
     @Override
@@ -102,6 +127,12 @@ public class LoginServiceImpl implements LoginService {
             addUserThirdAuthsRequest.setUserId(userInfoVO.getUserId());
             userThirdAuthsApi.addUserThirdAuths(addUserThirdAuthsRequest);
         }
+        LoginVO loginVO = saveUserSessionVO(userInfoVO);
+        rpcResponse.setData(loginVO);
+        return rpcResponse;
+    }
+
+    private LoginVO saveUserSessionVO(UserInfoVO userInfoVO) {
         //生成token
         String token = UUID.randomUUID().toString();
         UserSessionVO userSessionVO = new UserSessionVO();
@@ -111,7 +142,7 @@ public class LoginServiceImpl implements LoginService {
         LoginVO loginVO = new LoginVO();
         BeanUtils.copyProperties(userInfoVO, loginVO);
         loginVO.setToken(token);
-        return rpcResponse;
+        return loginVO;
     }
 
 
