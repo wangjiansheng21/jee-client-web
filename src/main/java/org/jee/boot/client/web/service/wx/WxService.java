@@ -3,6 +3,7 @@ package org.jee.boot.client.web.service.wx;
 import org.jee.boot.client.web.request.wx.Code2SessionRequest;
 import org.jee.boot.client.web.request.wx.GetPhoneNumRequest;
 import org.jee.boot.client.web.vo.Code2SessionVO;
+import org.jee.boot.client.web.vo.WxSessionVO;
 import org.jee.boot.dubbo.response.RpcResponse;
 
 public interface WxService {
@@ -21,4 +22,11 @@ public interface WxService {
      * @return
      */
     RpcResponse<String> getPhoneNum(GetPhoneNumRequest getPhoneNumRequest);
+
+    /**
+     * 获取微信会话session
+     * @param sessionKey
+     * @return
+     */
+    public WxSessionVO getWxSessionVO(String sessionKey);
 }

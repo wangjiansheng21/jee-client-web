@@ -7,6 +7,14 @@ spring:
         max-request-size: 10MB
   autoconfigure:
     exclude:
+  redis:
+    host: 8.133.160.19
+    port: 6379
+    database: 0
+    timeout: 60000
+    jedis:
+      pool:
+        max-active: 8
 dubbo:
   protocol:
     name: dubbo

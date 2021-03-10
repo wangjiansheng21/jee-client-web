@@ -4,21 +4,34 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import org.jee.boot.client.web.request.login.LoginOutRequest;
 import org.jee.boot.client.web.request.login.LoginRequest;
 import org.jee.boot.client.web.request.login.UserRegisterRequest;
+import org.jee.boot.client.web.request.login.WxAuthLoginRequest;
 import org.jee.boot.client.web.service.user.LoginService;
+import org.jee.boot.client.web.service.wx.WxService;
 import org.jee.boot.client.web.vo.LoginVO;
+import org.jee.boot.client.web.vo.WxSessionVO;
 import org.jee.boot.dubbo.response.RpcResponse;
 import org.jee.boot.user.api.UserInfoApi;
 import org.jee.boot.user.api.request.AddUserInfoRequest;
 import org.jee.boot.user.api.vo.UserInfoVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import static org.jee.boot.client.web.util.RedisKey.WX_SESSION_KEY;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
     @Reference
     UserInfoApi userInfoApi;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    WxService wxService;
 
     @Override
     public RpcResponse<LoginVO> login(LoginRequest loginRequest) {
@@ -29,11 +42,22 @@ public class LoginServiceImpl implements LoginService {
         return null;
     }
 
-
-    public LoginVO loginForWXMini(LoginRequest loginRequest){
-        //根据微信
-        return  null;
-
+    @Override
+    public RpcResponse<LoginVO> wxAuthLogin(WxAuthLoginRequest wxAuthLoginRequest) {
+        RpcResponse<LoginVO> rpcResponse = RpcResponse.ok();
+        //sessionKey 是否合法
+        WxSessionVO wxSessionVO = wxService.getWxSessionVO(wxAuthLoginRequest.getSessionKey());
+        if (wxSessionVO == null) {
+            rpcResponse.setSysFail("sessionKey无效!");
+            return rpcResponse;
+        }
+        //判断手机号码是否合法
+        if (!wxAuthLoginRequest.getPhoneNum().equals(wxSessionVO.getPhoneNum())) {
+            rpcResponse.setSysFail("手机号和当前登录微信不一致!");
+            return rpcResponse;
+        }
+        //调用用户中心第三方授权接口
+        return null;
     }
 
 
