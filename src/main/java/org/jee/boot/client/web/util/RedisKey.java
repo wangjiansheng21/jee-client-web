@@ -7,4 +7,5 @@ package org.jee.boot.client.web.util;
 public interface RedisKey {
     String WX_SESSION_KEY = "wx:login:sesionKey:";
     String LOGIN_TOKEN_KEY = "login：token:";
+    String WX_ACCES_TOEKN="wx：accesToken:appId:";
 }

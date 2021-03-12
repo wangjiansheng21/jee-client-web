@@ -141,7 +141,7 @@ public class LoginServiceImpl implements LoginService {
         String token = UUID.randomUUID().toString();
         UserSessionVO userSessionVO = new UserSessionVO();
         BeanUtils.copyProperties(userInfoVO, userSessionVO);
-        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + token, JSON.toJSONString(userSessionVO), 10, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(LOGIN_TOKEN_KEY + token, JSON.toJSONString(userSessionVO), 60*24, TimeUnit.MINUTES);
         //返回登录信息
         LoginVO loginVO = new LoginVO();
         BeanUtils.copyProperties(userInfoVO, loginVO);
