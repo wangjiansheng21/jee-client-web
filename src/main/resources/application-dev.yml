@@ -17,6 +17,13 @@ spring:
     jedis:
       pool:
         max-active: 8
+  data:
+    mongodb:
+      host: 8.133.160.19
+      database: db_education
+      username: jiansheng.wang
+      password: wjs123456
+      port: 27017
 dubbo:
   protocol:
     name: dubbo
