@@ -93,6 +93,8 @@ public class AESForWeixinGetPhoneNumber {
     }
 
     public static void main(String[] args) {
-        decrypt("69D1hgWDzVzwlIy/zZt/vuWuQ3QGg9O15QnCu2ccVKB8cPBQwmGoVEUint9pYWFTnFEwceKn3hAvcKNwG8jnNQ5n4rhdMeiwP6tUw2/zg3ExQMdKt8lOJ6pWyV63vDMdqrAFJy9D0C67aQvvjHnVjFtR/M8ZLxlbmx+d9fsP2GodKZyjLjKtfGZT2xj4cbaMdqLf6ZatCKBMKlbQ6Vf0YA==", "sxtJxnRBZENhgBIXn70mbw==", "vNBdhVUKWzvj3DVB11Fmdw==");
+        decrypt("p92GJCb1yveB9VZx0dgwA4uLHyjSBgbmEJ92AP5n5Ov4Mf0NtqzYuNywf+qKX/CUVU5cO6D7bqfKGLSvj7MheyGAzMHG/BF0SbOZ8dJIOeLMK6Er7p0tjlae6EeU/RZ9padq25Cb2WTSGp0581wIZmYMMwf1fKjrGfw91mlqmhL4mTNaXZfPMNJU62qpOfHzXMPwRNvQ+9fem7XovaPwUw==", "PEkh8sJDCglvHpvvFWk5PA==", "vh6HbQkEGt11hzgDxdqzsg==");
+//        decrypt("UwMwgOZtnWNqNfgpr7Q77DqdR0sauRDthfeAKsHc7r7QAg0gs9IgQtocNbcvebbkYxjMNslGkkKCBfefgcTVYYziVIaotBOIe/ycfqGGt1EExAMjc66dGp+YpBbyO1Fu9cx8QceyrwnHVZBpRBM6aAOTy7319N/DjW1RZMgDUDl1b3FrA2y+aHNojakxnO49iop6yTTOZUlPRvgnHfvqTw==", "fh5kMO0r+WSMcSfBNHv3RA==", "BVByJR4B48gS/oO+Q7fyhQ==");
+//        正常 decrypt("69D1hgWDzVzwlIy/zZt/vuWuQ3QGg9O15QnCu2ccVKB8cPBQwmGoVEUint9pYWFTnFEwceKn3hAvcKNwG8jnNQ5n4rhdMeiwP6tUw2/zg3ExQMdKt8lOJ6pWyV63vDMdqrAFJy9D0C67aQvvjHnVjFtR/M8ZLxlbmx+d9fsP2GodKZyjLjKtfGZT2xj4cbaMdqLf6ZatCKBMKlbQ6Vf0YA==", "sxtJxnRBZENhgBIXn70mbw==", "vNBdhVUKWzvj3DVB11Fmdw==");
     }
 }

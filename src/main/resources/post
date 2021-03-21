@@ -1,0 +1,38 @@
+1 登请求参数示例
+http://8.133.160.19:80/app-web/login/userLogin
+请求报文
+{"loginType":1,"phone":"18205096382","passWord":"wjs123456"}
+响应报文
+{
+    "code": "200",
+    "msg": "成功",
+    "total": 0,
+    "data": {
+        "loginName": "wangjiansheng",
+        "userName": null,
+        "nickName": null,
+        "avatar": null,
+        "phone": "18205096382",
+        "email": null,
+        "token": "2efbda0f-15ff-4523-9f42-202ed660de83",
+        "userId": 2
+    },
+    "succes": true
+}
+
+2 获取accesToken
+http://8.133.160.19:80/app-web/getAccesToken
+请求报文
+{"appId":"wx4ee63f7f28764c12"}
+
+响应报文
+{
+    "code": "200",
+    "msg": "成功",
+    "total": 0,
+    "data": {
+        "accesToken": "43_nmGbWYMQ1Cl85MokT9RVYtvtCKsxqK45aqJ9sMzy9LTBtdkheWfiQI07UCl0o5gMnce64FGYIfYsDlj2QufavFkXoV89JXHfJP6NYCn7iCI4r3SLyqd59SrZkPLPPpFd78bJRk-Fk9hHr2E4TNThAAAOIO",
+        "expiresIn": 7200
+    },
+    "succes": true
+}

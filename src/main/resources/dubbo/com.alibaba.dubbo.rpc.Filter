@@ -1,0 +1,1 @@
+dubboLogFilter=org.jee.boot.client.web.filter.DubboLogFilter

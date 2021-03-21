@@ -1,11 +1,9 @@
 package org.jee.boot.client.web.request.login;
 
+
 import lombok.Data;
-import lombok.NonNull;
-import org.jee.boot.user.api.request.AddUserInfoRequest;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Data
 public class UserRegisterRequest {
