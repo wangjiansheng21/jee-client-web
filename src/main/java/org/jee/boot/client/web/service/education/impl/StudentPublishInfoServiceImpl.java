@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Service
 public class StudentPublishInfoServiceImpl implements StudentPublishInfoService {
 
@@ -18,8 +21,18 @@ public class StudentPublishInfoServiceImpl implements StudentPublishInfoService 
     public RpcResponse saveStudentPublishInfo(StudentPublishInfo studentPublishInfo) {
         //TODO 校验必填参数
         RpcResponse rpcResponse = RpcResponse.ok();
+        studentPublishInfo.setCreatedTime(new Date());
+        studentPublishInfo.setUpdatedTime(studentPublishInfo.getCreatedTime());
         mongoTemplate.save(studentPublishInfo);
         rpcResponse.setData(studentPublishInfo.getId());
+        return rpcResponse;
+    }
+
+    @Override
+    public RpcResponse getDetail(String id) {
+        RpcResponse rpcResponse = new RpcResponse();
+        StudentPublishInfo studentPublishInfo = mongoTemplate.findById(id, StudentPublishInfo.class);
+        rpcResponse.setData(studentPublishInfo);
         return rpcResponse;
     }
 }

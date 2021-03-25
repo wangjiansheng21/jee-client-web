@@ -6,4 +6,6 @@ import org.jee.boot.dubbo.response.RpcResponse;
 public interface StudentPublishInfoService {
 
     public RpcResponse saveStudentPublishInfo(StudentPublishInfo studentPublishInfo);
+
+    public RpcResponse getDetail(String id);
 }
