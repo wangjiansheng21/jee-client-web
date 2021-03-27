@@ -12,7 +12,7 @@ spring:
   redis:
     host: 8.133.160.19
     port: 6379
-    database: 0
+    database: 1
     timeout: 60000
     jedis:
       pool:
@@ -45,3 +45,7 @@ appSecret: 56c8b14ed1c2a2a1c0de0400a6f5dc50
 wx:
   api:
     url: https://api.weixin.qq.com/
+baidu:
+  map:
+     api: http://api.map.baidu.com/
+     ak: zfGiMXD9ZD5CGmAG3C72TZnEnxKIhXQW

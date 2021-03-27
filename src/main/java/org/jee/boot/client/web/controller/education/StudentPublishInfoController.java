@@ -1,6 +1,7 @@
 package org.jee.boot.client.web.controller.education;
 
 import org.jee.boot.client.web.entity.StudentPublishInfo;
+import org.jee.boot.client.web.request.education.StudentPublishInfoListRequest;
 import org.jee.boot.client.web.service.education.StudentPublishInfoService;
 import org.jee.boot.dubbo.response.RpcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +28,8 @@ public class StudentPublishInfoController {
     }
 
 
+    @RequestMapping("/getList")
+    public RpcResponse getList(@RequestBody StudentPublishInfoListRequest studentPublishInfoListRequest){
+        return  studentPublishInfoService.getList(studentPublishInfoListRequest);
+    }
 }
