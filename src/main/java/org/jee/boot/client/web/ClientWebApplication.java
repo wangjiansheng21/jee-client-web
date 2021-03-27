@@ -13,7 +13,7 @@ import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @EnableDubbo
-@ServletComponentScan
+//@ServletComponentScan
 @SpringBootApplication()
 public class ClientWebApplication {
     public static void main(String[] args) {

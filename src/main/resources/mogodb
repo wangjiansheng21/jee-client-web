@@ -1,0 +1,9 @@
+db.student_publish_info.aggregate([
+   {
+     $geoNear: {
+        near : [121.570015,31.12133],
+        distanceField: "distance",
+        distanceMultiplier: 6378137 ,spherical:true
+     }
+   }
+]).skip(0).limit(10)

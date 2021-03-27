@@ -11,6 +11,6 @@ import org.jee.boot.client.web.entity.StudentPublishInfo;
 public class StudentPublishInfoVO extends StudentPublishInfo {
 
     //距离单位米
-    private double distance;
+    private Long distance;
 
 }
