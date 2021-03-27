@@ -14,7 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.NearQuery;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,6 +32,8 @@ import java.util.Date;
 public class StudentPublishInfoServiceImpl implements StudentPublishInfoService {
 
     static final String distanceField = "distance";
+
+    static final String COLLECTION_NAME = "student_publish_info";
 
     @Value("${baidu.map.api}")
     private String baiduApiUrl;
@@ -84,7 +90,10 @@ public class StudentPublishInfoServiceImpl implements StudentPublishInfoService 
     @Override
     public RpcResponse getList(StudentPublishInfoListRequest studentPublishInfoListRequest) {
         RpcResponse rpcResponse = new RpcResponse();
+        Criteria criteria = getListCriteria(studentPublishInfoListRequest);
+        rpcResponse.setTotal(getListCount(criteria));
         Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(criteria),
                 Aggregation.geoNear(NearQuery.near(studentPublishInfoListRequest.getLng(), studentPublishInfoListRequest.getLat()), distanceField),
                 Aggregation.skip(studentPublishInfoListRequest.getOffSet()),
                 Aggregation.limit(studentPublishInfoListRequest.getPageSize())
@@ -93,4 +102,27 @@ public class StudentPublishInfoServiceImpl implements StudentPublishInfoService 
         rpcResponse.setData(studentPublishInfoAggregationResults.getMappedResults());
         return rpcResponse;
     }
+
+    public long getListCount(Criteria criteria) {
+        long count = 0;
+        Query query = new Query();
+        query.addCriteria(criteria);
+        count = mongoTemplate.count(query, COLLECTION_NAME);
+        return count;
+    }
+
+    public Criteria getListCriteria(StudentPublishInfoListRequest publishInfoListRequest) {
+        Criteria criteriaDefinition = new Criteria();
+        if (!StringUtils.isEmpty(publishInfoListRequest.getProvinceId())) {
+            ((Criteria) criteriaDefinition).and("provinceId").is(publishInfoListRequest.getProvinceId());
+        }
+        if (!StringUtils.isEmpty(publishInfoListRequest.getCityId())) {
+            ((Criteria) criteriaDefinition).and("cityId").is(publishInfoListRequest.getCityId());
+        }
+        if (!StringUtils.isEmpty(publishInfoListRequest.getTownId())) {
+            ((Criteria) criteriaDefinition).and("townId").is(publishInfoListRequest.getTownId());
+        }
+        return criteriaDefinition;
+    }
+
 }

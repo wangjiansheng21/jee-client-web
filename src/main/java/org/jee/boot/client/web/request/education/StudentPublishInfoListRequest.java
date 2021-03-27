@@ -16,4 +16,11 @@ public class StudentPublishInfoListRequest extends BaseRequest {
 
     //用户id
     private Integer userId;
+
+    //
+    private  String provinceId;
+
+    private  String cityId;
+
+    private  String townId;
 }
